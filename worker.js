@@ -1,4 +1,4 @@
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/1RzwstN-LofU3iSag4bQHzCPIjnmoXgZTYQmbz19ZxAo/gviz/tq?tqx=out:csv';
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStiwE0IkIBcBuxNERkAuZk6mHY8ezabZUKqZXGwJXW-2SI8chAkpGXpBstg_M_9bLSUdXqOAEo0ico/pub?output=csv';
 const DEEPSEEK_URL = 'https://api.deepseek.com/v1/chat/completions';
 
 const CORS_HEADERS = {
