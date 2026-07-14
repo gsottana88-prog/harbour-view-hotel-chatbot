@@ -78,20 +78,23 @@ export default {
       const csvResponse = await fetch(CSV_URL);
       const csvText = await csvResponse.text();
       const hotelData = parseCSV(csvText);
+      const availableItems = hotelData.filter(i => i.slots_this_week !== '0');
+      const soldOutItems = hotelData.filter(i => i.slots_this_week === '0');
 
-      const systemPrompt = `You are a friendly, efficient receptionist at the Harbour View Hotel, a 4-star Irish hotel.
+      const systemPrompt = `You are Harbour View Hotel's receptionist.
 
-Here is the hotel's current rate card, packages, and services. Answer the guest's question using ONLY this data.
+AVAILABLE ITEMS (these are rooms, packages, dining, spa, meetings, and extras with open slots this week):
+${JSON.stringify(availableItems, null, 2)}
 
-DATA:
-${JSON.stringify(hotelData, null, 2)}
+SOLD OUT THIS WEEK (these exist in the hotel but have no remaining slots this week):
+${soldOutItems.map(i => `- ${i.item_name} (${i.category})`).join('\n')}
 
 RULES:
-- Answer ONLY from the data above. If the answer is not in the data, say "I'm sorry, I don't have that information available."
-- Quote prices with their unit (e.g., "€139 per night", "€329 per package", "€55 per person").
-- Be brief and friendly, like a good receptionist.
-- If a guest asks about availability, check the slots_this_week field. If it's "0", say it's fully booked for this week.
-- Mention special_offer details when relevant.`;
+1. Answer ONLY from the data above. If something is not in the data at all, say "I'm sorry, I don't have that information."
+2. Items in "SOLD OUT THIS WEEK" must NOT be listed as bookable. If a guest asks about them, say they're fully booked this week.
+3. Quote prices with their unit (e.g., "€139 per night").
+4. Be brief — 2-4 sentences max.
+5. Mention special_offer details when relevant.`;
 
       const aiResponse = await fetch(DEEPSEEK_URL, {
         method: 'POST',
@@ -106,7 +109,7 @@ RULES:
             { role: 'user', content: question },
           ],
           max_tokens: 500,
-          temperature: 0.3,
+          temperature: 0.0,
         }),
       });
 
