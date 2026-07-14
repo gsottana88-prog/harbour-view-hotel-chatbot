@@ -1,0 +1,4 @@
+name = "hotel-chatbot-worker"
+main = "worker.js"
+compatibility_date = "2025-04-01"
+account_id = "04ae565999d6f5102dbc17143c1b6838"
